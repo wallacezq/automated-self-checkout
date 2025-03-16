@@ -19,7 +19,6 @@ checkBatchSize() {
 }
 
 cid_count="${cid_count:=0}"
-CONTAINER_NAME="${CONTAINER_NAME:=gst}"
 cameras="${cameras:=}"
 stream_density_mount="${stream_density_mount:=}"
 stream_density_params="${stream_density_params:=}"
@@ -122,17 +121,14 @@ fi
 
 # generate unique container id based on the date with the precision upto nano-seconds
 cid=$(date +%Y%m%d%H%M%S%N)
-CONTAINER_NAME="${CONTAINER_NAME//\"/}" # Ensure to remove all double quotes from CONTAINER_NAME
-cid="${cid}"_${CONTAINER_NAME}
-echo "CONTAINER_NAME: ${CONTAINER_NAME}"
 echo "cid: $cid"
 
-touch /tmp/results/r"$cid".jsonl
-chown 1000:1000 /tmp/results/r"$cid".jsonl
-touch /tmp/results/gst-launch_"$cid".log
-chown 1000:1000 /tmp/results/gst-launch_"$cid".log
-touch /tmp/results/pipeline"$cid".log
-chown 1000:1000 /tmp/results/pipeline"$cid".log
+touch /tmp/results/r"$cid"_gst.jsonl
+chown 1000:1000 /tmp/results/r"$cid"_gst.jsonl
+touch /tmp/results/gst-launch_"$cid"_gst.log
+chown 1000:1000 /tmp/results/gst-launch_"$cid"_gst.log
+touch /tmp/results/pipeline"$cid"_$CONTAINER_NAME.log
+chown 1000:1000 /tmp/results/pipeline"$cid"_$CONTAINER_NAME.log
 
 cl_cache_dir="/home/pipeline-server/.cl-cache" \
 DISPLAY="$DISPLAY" \
