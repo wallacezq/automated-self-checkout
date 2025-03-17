@@ -6,11 +6,11 @@
 #
 
 PRE_PROCESS="${PRE_PROCESS:=""}" #""|pre-process-backend=vaapi-surface-sharing|pre-process-backend=vaapi-surface-sharing pre-process-config=VAAPI_FAST_SCALE_LOAD_FACTOR=1 
-AGGREGATE="${AGGREGATE:="gvametaaggregate name=aggregate !"}" # Aggregate function at the end of the pipeline ex. "" | gvametaaggregate name=aggregate
+AGGREGATE="${AGGREGATE:="gvametaaggregate name=aggregate ! queue !"}" # Aggregate function at the end of the pipeline ex. "" | gvametaaggregate name=aggregate
 PUBLISH="${PUBLISH:="name=destination file-format=2 file-path=/tmp/results/r$cid\"_gst\".jsonl"}" # address=localhost:1883 topic=inferenceEvent method=mqtt
 
 if [ "$RENDER_MODE" == "1" ]; then
-    OUTPUT="${OUTPUT:="! videoconvert ! video/x-raw,format=I420 ! gvawatermark ! videoconvert ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
+    OUTPUT="${OUTPUT:="! videoconvert ! \"video/x-raw(memory:VAMemory)\" ! gvawatermark ! videoconvert ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
 else
     OUTPUT="${OUTPUT:="! fpsdisplaysink video-sink=fakesink sync=true --verbose"}"
 fi
