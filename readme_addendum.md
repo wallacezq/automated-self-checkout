@@ -50,7 +50,11 @@
      DISPLAY=:0 RENDER_MODE=1 PIPELINE_SCRIPT=yolov11s_effnetb0.sh DEVICE_ENV=res/all-gpu.env docker compose -f src/docker-compose.yml up -d
      ```
 
-4.  Run stream density benchmark
+   > **Note**:
+   >
+   > To stop the demo, run ``` make down```
+
+4. Run stream density benchmark
 
    **Detection only:**
 
@@ -88,7 +92,19 @@
 
 
 
-> Note: 
+> **Note**: 
 >
 > - For description of the argument (eg PIPELINE_SCRIPT, DEVICE_ENV, etc) please refer to the [documentation](https://intel-retail.github.io/documentation/use-cases/automated-self-checkout/performance.html).
 
+
+
+5. Install [qmassa](https://github.com/ulissesf/qmassa) if you need a tool to visualize GPU utilization on Intel platform with Xe driver:
+
+   eg. For **Lunar Lake** platform:
+
+   ``` 
+   cargo install --locked --git https://github.com/ulissesf/qmassa
+   $HOME/.cargo/bin/qmassa -d 0000:00:02.0
+   ```
+
+   
