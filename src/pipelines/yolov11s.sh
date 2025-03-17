@@ -11,14 +11,14 @@ PUBLISH="${PUBLISH:="name=destination file-format=2 file-path=/tmp/results/r$cid
 
 if [ "$RENDER_MODE" == "1" ]; then
     #OUTPUT="${OUTPUT:="! videoconvert ! video/x-raw,format=I420 ! gvawatermark ! videoconvert ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
-    OUTPUT="${OUTPUT:="! queue ! \"video/x-raw(memory:VAMemory)\" !gvawatermark ! videoconvertscale ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
+    OUTPUT="${OUTPUT:="! videoconvert $VA_SURFACE_TYPE !gvawatermark ! videoconvertscale ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
 else
     OUTPUT="${OUTPUT:="! fpsdisplaysink video-sink=fakesink sync=true --verbose"}"
 fi
 
 echo "in file yolov11.sh"
 echo "decode type $DECODE"
-echo "Run yolov5s pipeline on $DEVICE with batch size = $BATCH_SIZE"
+echo "Run yolov11s pipeline on $DEVICE with batch size = $BATCH_SIZE"
 echo "OV version: $(python -c 'import openvino; print(openvino.__version__)')"
 echo "Inference backend: $(python -c 'from openvino import Core; print(Core().available_devices)')"
 

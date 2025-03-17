@@ -26,7 +26,7 @@ else
     OUTPUT="${OUTPUT:="! fpsdisplaysink video-sink=fakesink sync=true --verbose"}"
 fi
 
-echo "Run run yolov5s with efficientnet classification pipeline on $DEVICE with batch size = $BATCH_SIZE"
+echo "Run run yolov11s with efficientnet classification pipeline on $DEVICE with batch size = $BATCH_SIZE"
 echo "OV version: $(python -c 'import openvino; print(openvino.__version__)')"
 echo "Inference backend: $(python -c 'from openvino import Core; print(Core().available_devices)')"
 echo "Inference device: $DEVICE"
