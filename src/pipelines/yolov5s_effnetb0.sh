@@ -20,7 +20,7 @@ CLASSIFICATION_OPTIONS="${CLASSIFICATION_OPTIONS:="reclassify-interval=1 $DETECT
 PUBLISH="${PUBLISH:="name=destination file-format=2 file-path=/tmp/results/r$cid\"_gst\".jsonl"}" # address=localhost:1883 topic=inferenceEvent method=mqtt
 
 if [ "$RENDER_MODE" == "1" ]; then
-    OUTPUT="${OUTPUT:="! videoconvert ! video/x-raw,format=I420 ! gvawatermark ! videoconvert ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
+    OUTPUT="${OUTPUT:="! videoconvert $VA_SURFACE_TYPE ! gvawatermark ! videoconvert ! fpsdisplaysink video-sink=ximagesink sync=true --verbose"}"
 else
     OUTPUT="${OUTPUT:="! fpsdisplaysink video-sink=fakesink sync=true --verbose"}"
 fi

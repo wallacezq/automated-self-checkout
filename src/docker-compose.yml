@@ -32,7 +32,7 @@ services:
       - ${RETAIL_USE_CASE_ROOT:-..}/performance-tools/sample-media:/home/pipeline-server/sample-media
 
   OvmsClientGst:
-    image: dlstreamer:new_ihd
+    image: dlstreamer:dev
     deploy:
       mode: replicated
       replicas: ${PIPELINE_COUNT:-1}

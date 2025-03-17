@@ -1,4 +1,13 @@
+
+
 # Platform with Xe driver testing
+
+## Pre-requisite
+
+1. Recommended OS
+   - Ubuntu 24.04 (preferred)
+
+## Installation
 
 1. Checkout the lunar-lake-test branch 
 

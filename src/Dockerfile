@@ -17,6 +17,25 @@ COPY /pipelines /home/pipeline-server/pipelines
 COPY entrypoint.sh /script/entrypoint.sh
 RUN chmod +x /script/entrypoint.sh
 
+# Install latest libva
+RUN mkdir -p /tmp/newva
+WORKDIR /tmp/newva
+RUN git clone https://github.com/intel/libva.git
+WORKDIR /tmp/newva/libva
+RUN ./autogen.sh --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu && make -j"$(cat < /proc/cpuinfo |grep -c proc)" && make install
+WORKDIR /tmp/newva
+RUN git clone https://github.com/intel/gmmlib.git
+WORKDIR /tmp/newva/gmmlib
+RUN mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr/ -DCMAKE_INSTALL_LIBDIR=/usr/lib/x86_64-linux-gnu -DCMAKE_BUILD_TYPE=Release .. && \
+    make -j"$(cat < /proc/cpuinfo |grep -c proc)" && make install
+WORKDIR /tmp/newva/
+RUN git clone https://github.com/intel/media-driver.git
+RUN mkdir build_media && cd build_media && \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/usr/lib/x86_64-linux-gnu ../media-driver && \
+    make -j"$(cat < /proc/cpuinfo |grep -c proc)" && make install
+    
+
+
 FROM base as build-realsense
 RUN if [ -n "$HTTP_PROXY" ] ; then  echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >  /etc/apt/apt.conf; fi
 RUN apt-get update -y || true; DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -39,7 +58,7 @@ RUN apt-get update -y || true; DEBIAN_FRONTEND=noninteractive apt-get install -y
     meson && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
+    
 # Install realsense
 RUN mkdir -p /rs
 WORKDIR /rs
