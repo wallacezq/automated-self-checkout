@@ -122,8 +122,7 @@
 
 1. See [dlstreamer documentation](https://dlstreamer.github.io/dev_guide/yolo_models.html#yolov8-yolov9-yolov10-yolo11) for more info.
 2. Create a blank python script: ``` touch convert_yolo.py``` 
-3. Copy the content into the file
-4. Execute the script. ``` python convert_yolo.py```. Note that this script will generate 2 new folder, namely **FP32/** and **FP16/**.
+3. Copy the content into the file.
 
 ```python
 from ultralytics import YOLO
@@ -153,13 +152,13 @@ shutil.rmtree(converted_path)
 os.remove(f"{model_name}.pt")
 ```
 
-2. Copy the generated FP32 and FP16 folder into the object_detection model directory
+4. Execute the script. ``` python convert_yolo.py```. Note that this script will generate 2 new folder, namely **FP32/** and **FP16/**.
+5. Copy the generated **FP32** and **FP16** folder into the object_detection model directory
 
-   ``` 
-   cd automated-self-checkout
-   mkdir -p models/object_detection/yolov11s
-   mv FP32/ models/object_detection/yolov11s
-   mv FP16/ models/object_detection/yolov11s
-   ```
+``` 
+cd automated-self-checkout
+mkdir -p models/object_detection/yolov11s
+mv FP32/ models/object_detection/yolov11s
+mv FP16/ models/object_detection/yolov11s
+```
 
-   
