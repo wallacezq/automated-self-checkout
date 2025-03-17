@@ -117,3 +117,49 @@
    ```
 
    
+
+## Convert Ultralytics YOLOv11 model to OpenVINO format
+
+1. See [dlstreamer documentation](https://dlstreamer.github.io/dev_guide/yolo_models.html#yolov8-yolov9-yolov10-yolo11) for more info.
+2. Create a blank python script: ``` touch convert_yolo.py``` 
+3. Copy the content into the file
+4. Execute the script. ``` python convert_yolo.py```. Note that this script will generate 2 new folder, namely **FP32/** and **FP16/**.
+
+```python
+from ultralytics import YOLO
+import openvino, sys, shutil, os
+
+model_name = 'yolo11s'
+model_type = 'yolo_v11'
+weights = model_name + '.pt'
+model = YOLO(weights)
+model.info()
+
+converted_path = model.export(format='openvino')
+converted_model = converted_path + '/' + model_name + '.xml'
+
+core = openvino.Core()
+
+ov_model = core.read_model(model=converted_model)
+if model_type in ["YOLOv8-SEG", "yolo_v11_seg"]:
+    ov_model.output(0).set_names({"boxes"})
+    ov_model.output(1).set_names({"masks"})
+ov_model.set_rt_info(model_type, ['model_info', 'model_type'])
+
+openvino.save_model(ov_model, './FP32/' + model_name + '.xml', compress_to_fp16=False)
+openvino.save_model(ov_model, './FP16/' + model_name + '.xml', compress_to_fp16=True)
+
+shutil.rmtree(converted_path)
+os.remove(f"{model_name}.pt")
+```
+
+2. Copy the generated FP32 and FP16 folder into the object_detection model directory
+
+   ``` 
+   cd automated-self-checkout
+   mkdir -p models/object_detection/yolov11s
+   mv FP32/ models/object_detection/yolov11s
+   mv FP16/ models/object_detection/yolov11s
+   ```
+
+   
