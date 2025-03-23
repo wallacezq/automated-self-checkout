@@ -15,6 +15,10 @@ else
     OUTPUT="${OUTPUT:="! fpsdisplaysink video-sink=fakesink sync=true --verbose"}"
 fi
 
+# set NUM_STREAMS if device != NPU
+if [ "$DEVICE" != "NPU" ]; then
+   DEVICE="${DEVICE:="$DEVICE nireq=2 ie-config=NUM_STREAMS=2"}"
+fi
 echo "decode type $DECODE"
 echo "Run yolov5s pipeline on $DEVICE with batch size = $BATCH_SIZE"
 echo "OV version: $(python -c 'import openvino; print(openvino.__version__)')"

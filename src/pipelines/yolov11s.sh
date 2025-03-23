@@ -16,6 +16,15 @@ else
     OUTPUT="${OUTPUT:="! fpsdisplaysink video-sink=fakesink sync=true --verbose"}"
 fi
 
+# set NUM_STREAMS if device != NPU
+if [ "$DEVICE" != "NPU" ]; then
+   NUM_STREAMS="${NUM_STREAMS:="nireq=2 ie-config=NUM_STREAMS=2"}"
+fi
+
+if [ "$DEVICE" == "GPU" ]; then
+   DEVICE="${DEVICE:="GPU ie-config=GPU_DISABLE_WINOGRAD_CONVOLUTION=YES"}"
+fi
+
 echo "in file yolov11.sh"
 echo "decode type $DECODE"
 echo "Run yolov11s pipeline on $DEVICE with batch size = $BATCH_SIZE"
@@ -24,8 +33,11 @@ echo "Inference backend: $(python -c 'from openvino import Core; print(Core().av
 
 #gstLaunchCmd="GST_DEBUG=\"GST_TRACER:7\" GST_TRACERS=\"latency_tracer(flags=pipeline,interval=100)\" gst-launch-1.0 $inputsrc ! $DECODE ! gvadetect batch-size=$BATCH_SIZE model-instance-id=odmodel name=detection model=models/object_detection/yolov11s/FP16/yolov11s.xml model-proc=models/object_detection/yolov11s/yolov11s.json threshold=.5 device=$DEVICE $PRE_PROCESS ! $AGGREGATE gvametaconvert name=metaconvert add-empty-results=true ! gvametapublish name=destination file-format=2 file-path=/tmp/results/r$cid\"_gst\".jsonl $OUTPUT 2>&1 | tee >/tmp/results/gst-launch_$cid\"_gst\".log >(stdbuf -oL sed -n -e 's/^.*current: //p' | stdbuf -oL cut -d , -f 1 > /tmp/results/pipeline$cid\"_$CONTAINER_NAME\".log)"
 
-gstLaunchCmd="GST_DEBUG=\"GST_TRACER:7\" GST_TRACERS=\"latency_tracer(flags=pipeline,interval=100)\" gst-launch-1.0 $inputsrc ! $DECODE ! gvadetect batch-size=$BATCH_SIZE model-instance-id=odmodel name=detection model=/home/pipeline-server/models/object_detection/yolov11s/FP16/yolov11s.xml threshold=.5 device=$DEVICE $PRE_PROCESS ! $AGGREGATE gvametaconvert name=metaconvert add-empty-results=true ! gvametapublish name=destination file-format=2 file-path=/tmp/results/r$cid\"_gst\".jsonl $OUTPUT 2>&1 | tee >/tmp/results/gst-launch_$cid\"_gst\".log >(stdbuf -oL sed -n -e 's/^.*current: //p' | stdbuf -oL cut -d , -f 1 > /tmp/results/pipeline$cid\"_$CONTAINER_NAME\".log)"
+#FP16 working
+gstLaunchCmd="GST_DEBUG=\"GST_TRACER:7\" GST_TRACERS=\"latency_tracer(flags=pipeline,interval=100)\" gst-launch-1.0 $inputsrc ! $DECODE ! gvadetect batch-size=$BATCH_SIZE model-instance-id=odmodel name=detection model=/home/pipeline-server/models/object_detection/yolov11s/FP16/yolov11s.xml threshold=.5 device=$DEVICE  $NUM_STREAMS $PRE_PROCESS ! $AGGREGATE gvametaconvert name=metaconvert add-empty-results=true ! gvametapublish name=destination file-format=2 file-path=/tmp/results/r$cid\"_gst\".jsonl $OUTPUT 2>&1 | tee >/tmp/results/gst-launch_$cid\"_gst\".log >(stdbuf -oL sed -n -e 's/^.*current: //p' | stdbuf -oL cut -d , -f 1 > /tmp/results/pipeline$cid\"_$CONTAINER_NAME\".log)"
 
+#INT8 working
+#gstLaunchCmd="GST_DEBUG=\"GST_TRACER:7\" GST_TRACERS=\"latency_tracer(flags=pipeline,interval=100)\" gst-launch-1.0 $inputsrc ! $DECODE ! gvadetect batch-size=$BATCH_SIZE model-instance-id=odmodel name=detection model=/home/pipeline-server/models/object_detection/yolov11s/INT8/yolov11s.xml threshold=.5 device=$DEVICE  $NUM_STREAMS $PRE_PROCESS ! $AGGREGATE gvametaconvert name=metaconvert add-empty-results=true ! gvametapublish name=destination file-format=2 file-path=/tmp/results/r$cid\"_gst\".jsonl $OUTPUT 2>&1 | tee >/tmp/results/gst-launch_$cid\"_gst\".log >(stdbuf -oL sed -n -e 's/^.*current: //p' | stdbuf -oL cut -d , -f 1 > /tmp/results/pipeline$cid\"_$CONTAINER_NAME\".log)"
 
 
 echo "$gstLaunchCmd"

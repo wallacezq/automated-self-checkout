@@ -11,6 +11,7 @@ USER root
 FROM base as build-default
 COPY ./requirements.txt /requirements.txt
 RUN pip3 install --upgrade pip --no-cache-dir -r /requirements.txt
+RUN pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu
 WORKDIR /
 COPY /extensions /home/pipeline-server/extensions
 COPY /pipelines /home/pipeline-server/pipelines

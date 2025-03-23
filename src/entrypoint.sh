@@ -66,7 +66,7 @@ while :; do
 
 done
 
-if [ "$PIPELINE_SCRIPT" != "yolov5s.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov5s_effnetb0.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov5s_full.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov11s.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov11s_effnetb0.sh" ] 
+if [ "$PIPELINE_SCRIPT" != "yolov5s.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov5s_effnetb0.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov5s_full.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov8s.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov8s_effnetb0.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov11s.sh" ] && [ "$PIPELINE_SCRIPT" != "yolov11s_effnetb0.sh" ] 
 then
 	echo "Error on your input: $PIPELINE_SCRIPT"
 	show_help
